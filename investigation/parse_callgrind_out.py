@@ -3,42 +3,86 @@
 def build_dictionary(text):
     data = text.splitlines()
 
-    dictionary = {}
+    fn_dict = {}
+    fi_dict = {}
 
     for line in data:
         hasfn = False
+        hasfi = False
         if len(line) >= 3:
             if line[0:3] == 'fn=':
                 hasfn = True
+            elif line[0:3] == 'fl=' or line[0:3] == 'fi=':
+                hasfi = True
+
         if len(line) >= 4:
             if line[0:4] == 'cfn=':
                 hasfn = True
+            elif line[0:4] == 'cfl=' or line[0:4] == 'cfi=':
+                hasfi = True
 
         if hasfn:
             words = line.split();
-            if len(words) == 2:
+            if len(words) >= 2:
                 w = words[0].split("=")
-                dictionary[w[1]] = words[1]
+                fn_dict[w[1]] = " ".join(words[1:])
+        
+        if hasfi:
+            words = line.split();
+            if len(words) >= 2:
+                w = words[0].split("=")
+                fi_dict[w[1]] = " ".join(words[1:])
 
-    return dictionary
+
+    return [fn_dict, fi_dict]
 
 def transform_text(text, dictionary):
-    text1 = ""
+    text1 = []
+    data = text.splitlines()
 
-    return text1
+    fn_dict = dictionary[0]
+    fi_dict = dictionary[1]
+
+    for line in data:
+        hasfn = False
+        hasfi = False
+        if len(line) >= 3:
+            if line[0:3] == 'fn=':
+                hasfn = True
+            elif line[0:3] == 'fl=' or line[0:3] == 'fi=':
+                hasfi = True
+
+        if len(line) >= 4:
+            if line[0:4] == 'cfn=':
+                hasfn = True
+            elif line[0:4] == 'cfl=' or line[0:4] == 'cfi=':
+                hasfi = True
+
+        if hasfn:
+            words = line.split();
+            if len(words) == 1:
+                w = words[0].split("=")
+                w[1] = fn_dict[w[1]]
+                words[0] = "cfn="+w[1]
+            line = " ".join(words)
+        elif hasfi:
+            words = line.split();
+            if len(words) == 1:
+                w = words[0].split("=")
+                w[1] = fi_dict[w[1]]
+                words[0] = "cfi="+w[1]
+            line = " ".join(words)
+
+        text1 += [line]
+
+    return "\n".join(text1)
 
 
 import sys
 
-fin = sys.argv[1]
-fout = sys.argv[2]
-
-print "input file: "+fin
-print "output file: "+fout
-
-f = open(fin,"r")
-text = f.read();
-dictionary = build_dictionary(text)
-text1 = transform_text(text, dictionary)
+text_in = sys.stdin.read()
+dictionary = build_dictionary(text_in)
+text_out = transform_text(text_in, dictionary)
+print text_out
 
 
