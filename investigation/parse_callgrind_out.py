@@ -64,29 +64,29 @@ def transform_text(text, dictionary):
             words = line.split();
             if len(words) >= 1:
                 w = words[0].split("=")
-                w[1] = fn_dict[w[1]]
-                words[0] = "func= "+w[1]
+                name = fn_dict[w[1]]
+                words[0] = "func= "+name+" "+w[1]
             line = words[0]
         elif hascfn:
             words = line.split();
             if len(words) >= 1:
                 w = words[0].split("=")
-                w[1] = fn_dict[w[1]]
-                words[0] = "cfunc= "+w[1]
+                name = fn_dict[w[1]]
+                words[0] = "cfunc= "+name+" "+w[1]
             line = words[0]
         elif hasfi:
             words = line.split();
             if len(words) >= 1:
                 w = words[0].split("=")
-                w[1] = fi_dict[w[1]]
-                words[0] = "func_i= "+w[1]
+                name = fi_dict[w[1]]
+                words[0] = "func_i= "+name+" "+w[1]
             line = words[0]
         elif hascfi:
             words = line.split();
             if len(words) >= 1:
                 w = words[0].split("=")
-                w[1] = fi_dict[w[1]]
-                words[0] = "cfunc_i= "+w[1]
+                name = fi_dict[w[1]]
+                words[0] = "cfunc_i= "+name+" "+w[1]
             #line = " ".join(words)
             line = words[0]
 
