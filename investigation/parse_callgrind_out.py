@@ -46,6 +46,8 @@ def transform_text(text, dictionary):
     for line in data:
         hasfn = False
         hasfi = False
+        hascfn = False
+        hascfi = False
         if len(line) >= 3:
             if line[0:3] == 'fn=':
                 hasfn = True
@@ -54,24 +56,39 @@ def transform_text(text, dictionary):
 
         if len(line) >= 4:
             if line[0:4] == 'cfn=':
-                hasfn = True
+                hascfn = True
             elif line[0:4] == 'cfl=' or line[0:4] == 'cfi=':
-                hasfi = True
+                hascfi = True
 
         if hasfn:
             words = line.split();
-            if len(words) == 1:
+            if len(words) >= 1:
                 w = words[0].split("=")
                 w[1] = fn_dict[w[1]]
-                words[0] = "cfn="+w[1]
-            line = " ".join(words)
+                words[0] = "func= "+w[1]
+            line = words[0]
+        elif hascfn:
+            words = line.split();
+            if len(words) >= 1:
+                w = words[0].split("=")
+                w[1] = fn_dict[w[1]]
+                words[0] = "cfunc= "+w[1]
+            line = words[0]
         elif hasfi:
             words = line.split();
-            if len(words) == 1:
+            if len(words) >= 1:
                 w = words[0].split("=")
                 w[1] = fi_dict[w[1]]
-                words[0] = "cfi="+w[1]
-            line = " ".join(words)
+                words[0] = "func_i= "+w[1]
+            line = words[0]
+        elif hascfi:
+            words = line.split();
+            if len(words) >= 1:
+                w = words[0].split("=")
+                w[1] = fi_dict[w[1]]
+                words[0] = "cfunc_i= "+w[1]
+            #line = " ".join(words)
+            line = words[0]
 
         text1 += [line]
 
